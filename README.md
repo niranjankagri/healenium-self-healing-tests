@@ -98,9 +98,9 @@ Two more observations:
 | Part | Role |
 |---|---|
 | `healenium-web` 3.6.0 | `SelfHealingDriver.create(chromeDriver)` wraps the driver; settings in `src/test/resources/healenium.properties` |
-| `hlm-backend` 3.5.1 | Saves reference elements in Postgres, scores candidates, serves the report |
+| `hlm-backend` 4.0.2 | Saves reference elements in Postgres, scores candidates, serves the report |
 | `hlm-selector-imitator` 1.6 | Turns the chosen element into a CSS locator |
-| Postgres 15.5 | Storage; `docker compose down -v` forgets everything learned |
+| Postgres 18.6 | Storage; `docker compose down -v` forgets everything learned |
 
 ## Design
 
