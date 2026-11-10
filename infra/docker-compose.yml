@@ -1,0 +1,63 @@
+# Healenium backend for the tests: the same three services as Healenium's own docker-compose-web.yaml,
+# with versions pinned and a health check on each, so `docker compose up --wait` returns only when they are ready.
+#
+#   docker compose -f infra/docker-compose.yml up -d --wait     start
+#   docker compose -f infra/docker-compose.yml down -v          stop and forget every learned locator
+#
+# The password is for a throwaway local database that only these containers can use.
+name: healenium
+
+services:
+
+  # Stores, per locator, the element it found on the last good run (its tag, attributes, position in the page).
+  postgres-db:
+    image: postgres:15.5-alpine
+    environment:
+      POSTGRES_DB: healenium
+      POSTGRES_USER: healenium_user
+      POSTGRES_PASSWORD: healenium_local_only
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U healenium_user -d healenium"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # hlm-backend: the REST service healenium-web talks to. Saves the reference elements, scores the candidates
+  # on a changed page, records every healing and serves the HTML report.
+  healenium:
+    image: healenium/hlm-backend:3.5.1
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    ports:
+      - "7878:7878"
+    environment:
+      SPRING_POSTGRES_DB: healenium
+      SPRING_POSTGRES_SCHEMA: healenium
+      SPRING_POSTGRES_USER: healenium_user
+      SPRING_POSTGRES_PASSWORD: healenium_local_only
+      SPRING_POSTGRES_DB_HOST: postgres-db
+      # false: saved elements are keyed by locator + calling method only, not by page URL
+      KEY_SELECTOR_URL: "false"
+      COLLECT_METRICS: "true"
+      HLM_LOG_LEVEL: info
+    healthcheck:
+      # The image has no curl; bash can open a TCP connection by itself
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/7878' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+
+  # selector-imitator: turns the element the backend picked into a new CSS/XPath locator of the same kind.
+  selector-imitator:
+    image: healenium/hlm-selector-imitator:1.6
+    ports:
+      # Host port 18000: Windows often reserves 7914-8013 for Hyper-V, so 8000 may refuse to bind
+      - "18000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import socket; socket.create_connection(('127.0.0.1', 8000), 2)\" || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20

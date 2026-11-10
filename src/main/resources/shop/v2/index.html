@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Toolbox shop - sign in</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="shop.js"></script>
+</head>
+<body>
+<header><span class="brand">Toolbox shop</span><span class="release">Release 2</span></header>
+<main>
+  <!-- Release 2: form wrapped in a card, every id renamed, button text changed -->
+  <div class="card">
+    <form id="sign-in-form" class="panel" onsubmit="event.preventDefault(); login(this, showError)">
+      <h1>Welcome back</h1>
+      <label for="user-email">Email</label>
+      <input id="user-email" name="email" type="email" autocomplete="username">
+      <label for="user-password">Password</label>
+      <input id="user-password" name="password" type="password" autocomplete="current-password">
+      <button id="sign-in-button" class="btn btn-primary" type="submit">Sign in</button>
+      <div class="form-alert" role="alert" hidden></div>
+    </form>
+  </div>
+</main>
+<script>
+  function showError(text) {
+    const box = document.querySelector(".form-alert");
+    box.textContent = text;
+    box.hidden = false;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Toolbox shop - cart</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="shop.js"></script>
+</head>
+<body>
+<header>
+  <span class="brand">Toolbox shop</span>
+  <nav><a class="cart-link" href="products.html">Back to products</a></nav>
+</header>
+<main class="panel">
+  <h1>Your cart</h1>
+  <table id="cart-items"><tbody></tbody></table>
+  <p>Total: <strong id="cart-total"></strong></p>
+  <button id="checkout" class="primary" type="button" onclick="placeOrder()">Checkout</button>
+</main>
+<script>
+  requireLogin();
+  const body = document.querySelector("#cart-items tbody");
+  for (const id of cart()) {
+    const p = PRODUCTS.find(x => x.id === id);
+    body.insertAdjacentHTML("beforeend", `<tr class="cart-row"><td class="item-name">${p.name}</td><td>${money(p.price)}</td></tr>`);
+  }
+  document.querySelector("#cart-total").textContent = money(cartTotal());
+</script>
+</body>
+</html>

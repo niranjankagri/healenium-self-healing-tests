@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Toolbox shop - products</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="shop.js"></script>
+</head>
+<body>
+<header>
+  <span class="brand">Toolbox shop</span>
+  <nav>
+    <!-- Release 2: "cart" is now "basket" -->
+    <a class="basket-link" href="cart.html">Basket <span class="basket-badge">0</span></a>
+    <button id="sign-out" type="button" onclick="logout()">Sign out</button>
+  </nav>
+</header>
+<main>
+  <h1>Products</h1>
+  <section class="catalog">
+    <div class="catalog-grid"></div>
+  </section>
+</main>
+<script>
+  requireLogin();
+  const list = document.querySelector(".catalog-grid");
+  for (const p of PRODUCTS) {
+    list.insertAdjacentHTML("beforeend",
+      `<article class="catalog-item" data-sku="${p.id}">
+         <h2 class="item-title">${p.name}</h2>
+         <p class="price">${money(p.price)}</p>
+         <button class="btn-add btn-primary" type="button">Add to basket</button>
+       </article>`);
+  }
+  function refreshCount() { document.querySelector(".basket-badge").textContent = cart().length; }
+  list.addEventListener("click", e => {
+    const button = e.target.closest(".btn-add");
+    if (!button) return;
+    addToCart(button.closest(".catalog-item").dataset.sku);
+    button.textContent = "In basket";
+    button.disabled = true;
+    refreshCount();
+  });
+  refreshCount();
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Toolbox shop - order placed</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="shop.js"></script>
+</head>
+<body>
+<header><span class="brand">Toolbox shop</span></header>
+<main class="panel">
+  <h1 id="order-confirmation">Thank you for your order</h1>
+  <p>Order number: <strong id="order-number"></strong></p>
+  <p>Paid: <strong id="order-total"></strong></p>
+</main>
+<script>
+  requireLogin();
+  const order = JSON.parse(sessionStorage.getItem("lastOrder"));
+  document.querySelector("#order-number").textContent = order.number;
+  document.querySelector("#order-total").textContent = money(order.total);
+</script>
+</body>
+</html>

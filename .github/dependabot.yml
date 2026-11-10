@@ -1,0 +1,27 @@
+# Keeps dependencies, CI actions and the Healenium backend images current (security alerts are on separately). Once a month,
+# minor and patch updates are grouped into one pull request per ecosystem and folder; a major
+# version comes as its own pull request and is reviewed before merging. CI checks every update.
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      maven-minor-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      github-actions-minor-patch:
+        update-types: [minor, patch]
+
+  # Postgres, hlm-backend and selector-imitator in infra/docker-compose.yml. A new hlm-backend can change how
+  # elements are scored: the "known limit" tests in Release2HealingTest will show it.
+  - package-ecosystem: docker-compose
+    directory: "/infra"
+    schedule:
+      interval: monthly

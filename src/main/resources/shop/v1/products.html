@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Toolbox shop - products</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="shop.js"></script>
+</head>
+<body>
+<header>
+  <span class="brand">Toolbox shop</span>
+  <nav>
+    <a class="cart-link" href="cart.html">Cart <span class="cart-count">0</span></a>
+    <button id="logout" type="button" onclick="logout()">Log out</button>
+  </nav>
+</header>
+<main>
+  <h1>Products</h1>
+  <div class="product-list"></div>
+</main>
+<script>
+  requireLogin();
+  const list = document.querySelector(".product-list");
+  for (const p of PRODUCTS) {
+    list.insertAdjacentHTML("beforeend",
+      `<div class="product-card" data-product="${p.id}">
+         <h3 class="product-name">${p.name}</h3>
+         <p class="price">${money(p.price)}</p>
+         <button class="add-to-cart primary" type="button">Add to cart</button>
+       </div>`);
+  }
+  function refreshCount() { document.querySelector(".cart-count").textContent = cart().length; }
+  list.addEventListener("click", e => {
+    const button = e.target.closest(".add-to-cart");
+    if (!button) return;
+    addToCart(button.closest(".product-card").dataset.product);
+    button.textContent = "In cart";
+    button.disabled = true;
+    refreshCount();
+  });
+  refreshCount();
+</script>
+</body>
+</html>

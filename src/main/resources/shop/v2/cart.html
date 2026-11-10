@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Toolbox shop - basket</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="shop.js"></script>
+</head>
+<body>
+<header>
+  <span class="brand">Toolbox shop</span>
+  <nav><a class="basket-link" href="products.html">Continue shopping</a></nav>
+</header>
+<main class="panel">
+  <h1>Your basket</h1>
+  <table id="basket-lines"><tbody></tbody></table>
+  <div class="summary">
+    <p>Total: <strong id="basket-total"></strong></p>
+    <button id="place-order" class="btn btn-primary" type="button" onclick="placeOrder()">Place order</button>
+  </div>
+</main>
+<script>
+  requireLogin();
+  const body = document.querySelector("#basket-lines tbody");
+  for (const id of cart()) {
+    const p = PRODUCTS.find(x => x.id === id);
+    body.insertAdjacentHTML("beforeend", `<tr class="basket-line"><td class="line-name">${p.name}</td><td>${money(p.price)}</td></tr>`);
+  }
+  document.querySelector("#basket-total").textContent = money(cartTotal());
+</script>
+</body>
+</html>

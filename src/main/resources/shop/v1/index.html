@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Toolbox shop - sign in</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="shop.js"></script>
+</head>
+<body>
+<header><span class="brand">Toolbox shop</span><span class="release">Release 1</span></header>
+<main>
+  <form id="login-form" class="panel" onsubmit="event.preventDefault(); login(this, showError)">
+    <h1>Sign in</h1>
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" autocomplete="username">
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password">
+    <button id="login-button" class="primary" type="submit">Log in</button>
+    <div class="error-message" hidden></div>
+  </form>
+</main>
+<script>
+  function showError(text) {
+    const box = document.querySelector(".error-message");
+    box.textContent = text;
+    box.hidden = false;
+  }
+</script>
+</body>
+</html>

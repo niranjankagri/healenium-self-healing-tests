@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  Order matters and is fixed here: release 1 first (Healenium learns the elements), then release 2 healed,
+  then release 2 without healing (control). No parallel runs: all three share one shop that changes release.
+-->
+<suite name="Healenium self-healing" preserve-order="true">
+    <test name="1. Release 1: learn">
+        <classes><class name="com.niranjankagri.healing.tests.Release1LearningTest"/></classes>
+    </test>
+    <test name="2. Release 2: healed">
+        <classes><class name="com.niranjankagri.healing.tests.Release2HealingTest"/></classes>
+    </test>
+    <test name="3. Release 2: no healing (control)">
+        <classes><class name="com.niranjankagri.healing.tests.Release2WithoutHealingTest"/></classes>
+    </test>
+</suite>

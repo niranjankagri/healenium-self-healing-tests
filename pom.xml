@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Self-healing Selenium tests with Healenium.
+  A demo shop ships two releases; release 2 renames or moves every locator the tests use.
+  The same page objects run on release 1 (Healenium learns each element) and then on release 2
+  (Healenium finds the moved elements and the tests keep passing).
+
+  Start the Healenium backend first (Postgres, hlm-backend, imitator): see infra/docker-compose.yml.
+  ./mvnw verify      build and run every test (needs Java 21, Chrome and the backend)
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.niranjankagri</groupId>
+    <artifactId>healenium-self-healing-tests</artifactId>
+    <version>1.0.0</version>
+    <name>healenium-self-healing-tests</name>
+    <description>Self-healing Selenium locators with Healenium: learn on one release, heal on the next</description>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <selenium.version>4.52.0</selenium.version>
+        <healenium.version>3.6.0</healenium.version>
+        <testng.version>7.12.0</testng.version>
+        <assertj.version>3.27.7</assertj.version>
+        <slf4j.version>2.0.17</slf4j.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+        <!-- SelfHealingDriver: wraps a WebDriver and heals findElement calls through the backend -->
+        <dependency>
+            <groupId>com.epam.healenium</groupId>
+            <artifactId>healenium-web</artifactId>
+            <version>${healenium.version}</version>
+            <!-- healenium-web 3.6.0 publishes its own test libraries with compile scope. Left in, JUnit makes
+                 Surefire pick the JUnit Platform and run 0 TestNG tests; Testcontainers is not used at all. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Healenium looks for @DisableHealing on every class in the call stack (Class.getMethods), which
+             loads the TestNG classes there; some of them refer to Guice, optional since TestNG 7.12. -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>7.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.16.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.6</version>
+                <!-- 3.5.x on purpose: from 3.6.0 Surefire runs TestNG on the JUnit Platform and ignores suite XML files -->
+                <configuration>
+                    <!-- The order matters: release 1 teaches Healenium, release 2 is healed from what it learned -->
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
