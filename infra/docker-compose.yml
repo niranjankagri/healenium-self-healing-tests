@@ -11,7 +11,7 @@ services:
 
   # Stores, per locator, the element it found on the last good run (its tag, attributes, position in the page).
   postgres-db:
-    image: postgres:15.5-alpine
+    image: postgres:18.6-alpine
     environment:
       POSTGRES_DB: healenium
       POSTGRES_USER: healenium_user
