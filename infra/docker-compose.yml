@@ -27,7 +27,7 @@ services:
   # hlm-backend: the REST service healenium-web talks to. Saves the reference elements, scores the candidates
   # on a changed page, records every healing and serves the HTML report.
   healenium:
-    image: healenium/hlm-backend:3.5.1
+    image: healenium/hlm-backend:4.0.2
     depends_on:
       postgres-db:
         condition: service_healthy
