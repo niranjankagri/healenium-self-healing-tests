@@ -25,7 +25,7 @@
         <healenium.version>3.6.0</healenium.version>
         <testng.version>7.12.0</testng.version>
         <assertj.version>3.27.7</assertj.version>
-        <slf4j.version>2.0.17</slf4j.version>
+        <slf4j.version>2.0.20</slf4j.version>
     </properties>
 
     <dependencies>
@@ -94,7 +94,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.6</version>
+                <version>3.6.1</version>
                 <!-- 3.5.x on purpose: from 3.6.0 Surefire runs TestNG on the JUnit Platform and ignores suite XML files -->
                 <configuration>
                     <!-- The order matters: release 1 teaches Healenium, release 2 is healed from what it learned -->
