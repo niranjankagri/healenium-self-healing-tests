@@ -194,7 +194,7 @@ Needs Java 21+, Chrome and Docker.
 
 ```bash
 docker compose -f infra/docker-compose.yml up -d --wait   # Postgres, hlm-backend :7878, selector-imitator :18000
-./mvnw verify                                            # all 15 tests, in the order of src/test/resources/testng.xml
+./mvnw verify                                            # all 41 tests, in the order of src/test/resources/testng.xml
 open http://localhost:7878/healenium/report              # the healing report
 docker compose -f infra/docker-compose.yml down -v       # stop and forget what was learned
 ```
