@@ -1,0 +1,130 @@
+{
+  "reviewed": [
+    {
+      "pageObject": "LoginPage#submit",
+      "locator": "By.id: email",
+      "healedTo": "By.cssSelector: input#user-email",
+      "verdict": "approved",
+      "note": "Release 2 renamed the email field to #user-email: same input."
+    },
+    {
+      "pageObject": "LoginPage#submit",
+      "locator": "By.id: password",
+      "healedTo": "By.cssSelector: input#user-password",
+      "verdict": "approved",
+      "note": "Release 2 renamed the password field to #user-password: same input."
+    },
+    {
+      "pageObject": "LoginPage#submit",
+      "locator": "By.id: login-button",
+      "healedTo": "By.cssSelector: button#sign-in-button",
+      "verdict": "approved",
+      "note": "Release 2 renamed the button and its text (Log in -> Sign in): same submit button."
+    },
+    {
+      "pageObject": "ProductCard#addToCart",
+      "locator": "By.xpath: //div[@class='product-card'][h3[@class='product-name' and normalize-space()='Torque wrench']]/button[contains(@class,'add-to-cart')]",
+      "healedTo": "By.cssSelector: html > body > main > section > div > article:nth-child(1) > button",
+      "verdict": "approved",
+      "note": "Tie of three look-alike buttons; checked: article 1 is the torque wrench. Positional: right while the catalog lists torque wrench, socket set, spirit level in that order. Ask for a data-testid per product."
+    },
+    {
+      "pageObject": "ProductCard#addToCart",
+      "locator": "By.xpath: //div[@class='product-card'][h3[@class='product-name' and normalize-space()='Socket set']]/button[contains(@class,'add-to-cart')]",
+      "healedTo": "By.cssSelector: html > body > main > section > div > article:nth-child(2) > button",
+      "verdict": "approved",
+      "note": "Tie between the two buttons still reading 'Add to basket'; checked: article 2 is the socket set. Positional: right while the catalog lists torque wrench, socket set, spirit level in that order. Ask for a data-testid per product."
+    },
+    {
+      "pageObject": "LoginPage#errorText",
+      "locator": "By.cssSelector: .error-message",
+      "healedTo": "By.cssSelector: div.card",
+      "verdict": "rejected",
+      "note": "Wrong element: div.card is the new wrapper around the whole form; the error box is now div.form-alert[role=alert]. Fix the locator in LoginPage."
+    },
+    {
+      "pageObject": "HeaderComponent#cartCount",
+      "locator": "By.cssSelector: .cart-count",
+      "healedTo": "By.cssSelector: span.basket-badge",
+      "verdict": "approved",
+      "note": "Cart badge renamed to basket badge: same counter."
+    },
+    {
+      "pageObject": "ProductCard#priceLabel",
+      "locator": "By.xpath: //div[@class='product-card'][h3[@class='product-name' and normalize-space()='Torque wrench']]/p[@class='price']",
+      "healedTo": "By.cssSelector: html > body > main > section > div > article:nth-child(1) > p",
+      "verdict": "approved",
+      "note": "Article 1 is the torque wrench, p is its price. Positional: right while the catalog lists torque wrench, socket set, spirit level in that order. Ask for a data-testid per product."
+    },
+    {
+      "pageObject": "ProductCard#priceLabel",
+      "locator": "By.xpath: //div[@class='product-card'][h3[@class='product-name' and normalize-space()='Spirit level']]/p[@class='price']",
+      "healedTo": "By.cssSelector: html > body > main > section > div > article:nth-child(3) > p",
+      "verdict": "approved",
+      "note": "Article 3 is the spirit level, p is its price. Positional: right while the catalog lists torque wrench, socket set, spirit level in that order. Ask for a data-testid per product."
+    },
+    {
+      "pageObject": "HeaderComponent#logOut",
+      "locator": "By.id: logout",
+      "healedTo": "By.cssSelector: button#sign-out",
+      "verdict": "approved",
+      "note": "Log out renamed to #sign-out (Sign out): same button."
+    },
+    {
+      "pageObject": "ProductCard#buttonLabel",
+      "locator": "By.xpath: //div[@class='product-card'][h3[@class='product-name' and normalize-space()='Torque wrench']]/button[contains(@class,'add-to-cart')]",
+      "healedTo": "By.cssSelector: html > body > main > section > div > article:nth-child(3) > button",
+      "verdict": "rejected",
+      "note": "Wrong card: article 3 is the spirit level, the torque wrench is article 1. It wins clearly (0.897 vs 0.781) only because after two clicks the spirit level's button is the one still reading 'Add to basket' like the saved reference."
+    },
+    {
+      "pageObject": "HeaderComponent#openCart",
+      "locator": "By.cssSelector: a.cart-link",
+      "healedTo": "By.cssSelector: a",
+      "verdict": "approved",
+      "note": "Right link (a.basket-link, 'Basket'), but the healed locator is just 'a': it works only while the products page has a single link. Fix the locator in HeaderComponent soon."
+    },
+    {
+      "pageObject": "CartPage#itemName",
+      "locator": "By.cssSelector: #cart-items tr.cart-row:nth-of-type(1) td.item-name",
+      "healedTo": "By.cssSelector: html > body > main > table > tbody > tr:nth-child(1) > td:nth-child(1)",
+      "verdict": "approved",
+      "note": "Row 1, first cell = td.line-name of the first basket line."
+    },
+    {
+      "pageObject": "CartPage#itemName",
+      "locator": "By.cssSelector: #cart-items tr.cart-row:nth-of-type(2) td.item-name",
+      "healedTo": "By.cssSelector: html > body > main > table > tbody > tr:nth-child(2) > td:nth-child(1)",
+      "verdict": "approved",
+      "note": "Row 2, first cell = td.line-name of the second basket line."
+    },
+    {
+      "pageObject": "CartPage#total",
+      "locator": "By.id: cart-total",
+      "healedTo": "By.cssSelector: strong#basket-total",
+      "verdict": "approved",
+      "note": "Cart total renamed to #basket-total: same amount."
+    },
+    {
+      "pageObject": "CartPage#checkout",
+      "locator": "By.id: checkout",
+      "healedTo": "By.cssSelector: button#place-order",
+      "verdict": "approved",
+      "note": "Checkout renamed to #place-order (Place order): same button. Lowest score of the run (0.694), checked by hand."
+    },
+    {
+      "pageObject": "ConfirmationPage#heading",
+      "locator": "By.id: order-confirmation",
+      "healedTo": "By.cssSelector: h1#thank-you",
+      "verdict": "approved",
+      "note": "Confirmation heading renamed to #thank-you: same h1."
+    },
+    {
+      "pageObject": "ConfirmationPage#orderNumber",
+      "locator": "By.id: order-number",
+      "healedTo": "By.cssSelector: strong#order-ref",
+      "verdict": "approved",
+      "note": "Order number renamed to #order-ref; runner-up was #order-total (0.771), not chosen."
+    }
+  ]
+}

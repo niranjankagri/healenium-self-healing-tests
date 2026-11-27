@@ -3,6 +3,9 @@ package com.niranjankagri.healing.tests;
 import com.epam.healenium.SelfHealingDriver;
 import com.niranjankagri.healing.app.DemoShop;
 import com.niranjankagri.healing.app.Release;
+import com.niranjankagri.healing.control.HealingJournal;
+import com.niranjankagri.healing.control.HealingPolicy;
+import com.niranjankagri.healing.control.ReviewedHeals;
 import com.niranjankagri.healing.driver.DriverFactory;
 import com.niranjankagri.healing.pages.LoginPage;
 import org.openqa.selenium.OutputType;
@@ -14,6 +17,8 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
+
+import java.lang.reflect.Method;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,6 +40,11 @@ public abstract class BaseTest {
     /** Self-healing or plain driver. */
     protected abstract DriverFactory.Kind driverKind();
 
+    /** The heals a person has already approved or rejected: by default the file in the repository. */
+    protected ReviewedHeals reviewedHeals() {
+        return ReviewedHeals.load(HealingPolicy.fromSystemProperties().approvalsFile());
+    }
+
     @BeforeSuite(alwaysRun = true)
     public void startShop() {
         shop = DemoShop.start(Release.V1);
@@ -45,6 +55,8 @@ public abstract class BaseTest {
         if (shop != null) {
             shop.close();
         }
+        // The evidence behind the review report: target/healing/heals.json
+        HealingJournal.run().write();
     }
 
     /** "Deploys" this class's release before its first test, at the same URL as before. */
@@ -54,8 +66,10 @@ public abstract class BaseTest {
     }
 
     @BeforeMethod(alwaysRun = true)
-    public void openBrowser() {
-        driver = DriverFactory.create(driverKind());
+    public void openBrowser(Method test) {
+        // Every heal in the journal says which test hit it
+        HealingJournal.run().startTest(getClass().getSimpleName() + "." + test.getName());
+        driver = DriverFactory.create(driverKind(), reviewedHeals());
     }
 
     @AfterMethod(alwaysRun = true)

@@ -3,7 +3,8 @@
   Self-healing Selenium tests with Healenium.
   A demo shop ships two releases; release 2 renames or moves every locator the tests use.
   The same page objects run on release 1 (Healenium learns each element) and then on release 2
-  (Healenium finds the moved elements and the tests keep passing).
+  (Healenium finds the moved elements and the tests keep passing). Controlled healing on top: a heal is used
+  only with a clear winner, rejected heals are stopped, and a review gate fails the run for unreviewed heals.
 
   Start the Healenium backend first (Postgres, hlm-backend, imitator): see infra/docker-compose.yml.
   ./mvnw verify      build and run every test (needs Java 21, Chrome and the backend)
@@ -14,7 +15,7 @@
 
     <groupId>com.niranjankagri</groupId>
     <artifactId>healenium-self-healing-tests</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>healenium-self-healing-tests</name>
     <description>Self-healing Selenium locators with Healenium: learn on one release, heal on the next</description>
 
