@@ -90,16 +90,6 @@ public final class ReviewedHeals {
         }
     }
 
-    /** Writes entries in the same layout, e.g. the proposals for heals that still need a verdict. */
-    static void write(Path file, List<Entry> entries) {
-        try {
-            Files.createDirectories(file.toAbsolutePath().getParent());
-            JSON.writeValue(file.toFile(), new FileContent(entries));
-        } catch (IOException e) {
-            throw new UncheckedIOException("Cannot write " + file, e);
-        }
-    }
-
     /** The verdict on exactly this heal, if someone gave one. */
     public Optional<Entry> verdictOn(HealKey key) {
         return Optional.ofNullable(byKey.get(key));
