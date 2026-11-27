@@ -47,7 +47,9 @@ services:
       SPRING_POSTGRES_DB_HOST: postgres-db
       # false: saved elements are keyed by locator + calling method only, not by page URL
       KEY_SELECTOR_URL: "false"
-      COLLECT_METRICS: "true"
+      # false: with true (the image's default), hlm-backend uploads each healing's metrics, including the page
+      # DOM, to an EPAM endpoint on AWS (AmazonRestService in hlm-backend 4.0.0 and 4.0.2). Tests must not send pages out.
+      COLLECT_METRICS: "false"
       HLM_LOG_LEVEL: info
     healthcheck:
       # Port open = Tomcat is up. 4.0.0 is an Alpine image without bash or curl; busybox nc is there

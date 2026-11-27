@@ -1,16 +1,27 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <!--
-  Order matters and is fixed here: release 1 first (Healenium learns the elements), then release 2 healed,
-  then release 2 without healing (control). No parallel runs: all three share one shop that changes release.
+  Order matters and is fixed here: the healing-control rules (no browser), release 1 (Healenium learns the
+  elements), release 2 on "day one" (nothing reviewed), release 2 after review, release 2 without healing
+  (control), and last the review gate over the heals of steps 2 and 3. No parallel runs: the browser tests share
+  one shop that changes release, and the gate reads the heal journal they fill.
 -->
 <suite name="Healenium self-healing" preserve-order="true">
+    <test name="0. Healing control rules (no browser)">
+        <classes><class name="com.niranjankagri.healing.control.HealingControlTest"/></classes>
+    </test>
     <test name="1. Release 1: learn">
         <classes><class name="com.niranjankagri.healing.tests.Release1LearningTest"/></classes>
     </test>
-    <test name="2. Release 2: healed">
+    <test name="2. Release 2: day one, nothing reviewed">
+        <classes><class name="com.niranjankagri.healing.tests.Release2FirstReviewTest"/></classes>
+    </test>
+    <test name="3. Release 2: after review">
         <classes><class name="com.niranjankagri.healing.tests.Release2HealingTest"/></classes>
     </test>
-    <test name="3. Release 2: no healing (control)">
+    <test name="4. Release 2: no healing (control)">
         <classes><class name="com.niranjankagri.healing.tests.Release2WithoutHealingTest"/></classes>
+    </test>
+    <test name="5. Heal review gate">
+        <classes><class name="com.niranjankagri.healing.tests.HealReviewGateTest"/></classes>
     </test>
 </suite>
