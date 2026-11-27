@@ -27,7 +27,9 @@ services:
   # hlm-backend: the REST service healenium-web talks to. Saves the reference elements, scores the candidates
   # on a changed page, records every healing and serves the HTML report.
   healenium:
-    image: healenium/hlm-backend:4.0.2
+    # 4.0.0 with its digest: 4.0.1 and 4.0.2 were withdrawn from Docker Hub (4.0.2 "not found" on 27 Nov 2026) and
+    # 4.0.0 was pushed again on 24 Nov, so the digest pins the exact image the tests were checked with.
+    image: healenium/hlm-backend:4.0.0@sha256:d33c1cc8e56e4d1b2972ae52891897c6965852637e3aa26c988e900fa1fd41ce
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -38,14 +40,18 @@ services:
       SPRING_POSTGRES_SCHEMA: healenium
       SPRING_POSTGRES_USER: healenium_user
       SPRING_POSTGRES_PASSWORD: healenium_local_only
+      # 4.0.0 runs its database migrations (Liquibase) as a separate user; without these it falls back to the
+      # image's built-in password and cannot log in
+      SPRING_LIQUIBASE_USER: healenium_user
+      SPRING_LIQUIBASE_PASSWORD: healenium_local_only
       SPRING_POSTGRES_DB_HOST: postgres-db
       # false: saved elements are keyed by locator + calling method only, not by page URL
       KEY_SELECTOR_URL: "false"
       COLLECT_METRICS: "true"
       HLM_LOG_LEVEL: info
     healthcheck:
-      # The image has no curl; bash can open a TCP connection by itself
-      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/7878' || exit 1"]
+      # Port open = Tomcat is up. 4.0.0 is an Alpine image without bash or curl; busybox nc is there
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 7878 || exit 1"]
       interval: 5s
       timeout: 3s
       retries: 40
